@@ -1,5 +1,6 @@
 import { get_csrf_token } from "./ApiCalls.js";
 import { isLoggedIn } from "./Utils.js";
+import { hostname } from "./Router.js";
 
 async function injectUserData(divToFill = null, username = null) {
 	if (await isLoggedIn())
@@ -20,9 +21,9 @@ async function injectUserData(divToFill = null, username = null) {
 
 async function getUserData(dataElement, username) {
 	if (username)
-		var route = `https://127.0.0.1:8000/api/users/get_user_data/${username}/`;
+    	var route = `https://${hostname}:8000/api/users/get_user_data/${username}/`;
 	else
-		var route = "https://127.0.0.1:8000/api/users/get_user_data/";
+		var route = `https://${hostname}:8000/api/users/get_user_data/`;
   return fetch(route, {
     method: "GET",
     headers: {
@@ -38,7 +39,7 @@ async function getUserData(dataElement, username) {
       if (statusCode === 200) {
         if (dataElement) 
           return data.user[dataElement];
-        else 
+        else
           return data.user;
       } else 
         console.log("User not Logged in:", data.error);

@@ -7,9 +7,9 @@ function createSpotLight(left, color, environment) {
 	var light = new THREE.PointLight(color, 50);
 	
 	if (left < 0)
-		light.position.set(left - .4, .5, .5).unproject(environment.camera);
+		light.position.set(left - 0.4, 0.5, 0.5).unproject(environment.camera);
 	else
-		light.position.set(left + .4, .5, .5).unproject(environment.camera);
+		light.position.set(left + 0.4, 0.5, 0.5).unproject(environment.camera);
 	environment.scene.add(light);
 	return (light);
 }

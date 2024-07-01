@@ -1,9 +1,10 @@
 import { resetForm, toggleConfirmPasswordModal, inputInitListeners } from "./DashboardUtils.js";
 import { showAlert } from "./Utils.js";
 import { injectUserData } from "./User.js";
+import { hostname } from "./Router.js";
 
 async function get_csrf_token() {
-	return fetch("https://127.0.0.1:8000/api/users/get_csrf_token/", {
+	return fetch(`https://${hostname}:8000/api/users/get_csrf_token/`, {
 		method: "GET",
 		credentials: "include",
 	})
@@ -15,7 +16,7 @@ async function get_csrf_token() {
 }
 
 async function runEndPoint(endpoint, method, fetchBody) {
-	return fetch("https://127.0.0.1:8000/api/" + endpoint, {
+	return fetch(`https://${hostname}:8000/api/` + endpoint, {
 		method: method,
 		headers: {
 			"X-CSRFToken": await get_csrf_token(),

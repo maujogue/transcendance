@@ -8,10 +8,10 @@ from .models import Match
 def user_exists(func):
     def wrapper(request, user, *args, **kwargs):
         try:
-            user = CustomUser.objects.get(username=user)
+            userAuth = CustomUser.objects.get(username=user)
         except CustomUser.DoesNotExist:
             return JsonResponse({"error": "User not found"}, status=404)
-        return func(request, user, *args, **kwargs)
+        return func(request, userAuth.tournament_username, *args, **kwargs)
     return wrapper
 
 @require_http_methods(["GET"])
@@ -78,7 +78,7 @@ def get_user_win_streak(request, user):
     current_series_length = 0 
 
     for match in matches:
-        if match.winner == user.username:
+        if match.winner == user:
             current_series_length += 1
         else:
             max_series_length = max(max_series_length, current_series_length)  

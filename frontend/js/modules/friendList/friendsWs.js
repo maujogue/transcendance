@@ -2,12 +2,13 @@ import { getUserData } from "../../User.js"
 import { showAlert } from "../../Utils.js";
 import { fillInbox, initUserRequests } from "./friendList.js";
 import { fillFriendsList } from "./friendList.js";
+import { hostname } from "../../Router.js";
 
 let currentUser;
 let wsFriends;
 
 export async function friendsWebsocket() {
-	wsFriends = new WebSocket("wss://127.0.0.1:8000/ws/friends/");
+	wsFriends = new WebSocket(`ws://${hostname}:8080/ws/friends/`);
 	wsFriends.onopen = async function () {
 		currentUser = await getUserData('username');
 		auth();

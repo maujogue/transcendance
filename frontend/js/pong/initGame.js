@@ -1,5 +1,6 @@
 import { createBall } from './createBall.js';
 import { createEnvironment, createMap } from './createEnvironment.js';
+import { createDivMenu } from './menu.js';
 import { loadFont, actualizeScore } from './score.js';
 import { colors } from './varGlobal.js';
 import * as THREE from 'three';

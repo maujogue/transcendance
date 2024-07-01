@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:tournament_id>/quit/', views.quit_tournament, name='quit_tournament'),
     path('delete/<int:tournament_id>/', views.delete_tournament, name='delete_tournament'),
     path('check-subscribed/<str:username>/', views.check_if_tournament_joined, name='check_if_tournament_joined'),
+    path('history/<str:username>/', views.return_all_user_tournaments, name='return_all_user_tournaments')
 ]

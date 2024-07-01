@@ -79,7 +79,7 @@ def oauth_callback(request):
 
     if 'image' in user_info and 'versions' in user_info['image'] and 'medium' in user_info['image']['versions']:
         img_url = user_info['image']['versions']['medium']
-        avatarMedium = download_image(img_url, username)
+        avatarMedium = download_image(img_url, username) #TODO secure that
     else:
         return redirect('/dash?success=false&message=42_auth_error')
     

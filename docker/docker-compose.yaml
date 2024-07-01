@@ -2,49 +2,51 @@ services:
   django_backend:
     build:
         context: ../py_backend/docker
-        dockerfile: Dockerfile.dev
+        dockerfile: Dockerfile.prod
     volumes:
+       - staticfiles:/staticfiles
        - ../py_backend:/code
-       - certificates:/etc/nginx/ssl
-    ports:
-      - "8080:8000"
+       - certificates:/etc/nginx/ssl  
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     depends_on:
       db:
         condition: service_healthy
+    restart: always
+
 
   db:
-    image: postgres
-    restart: always
+    image: postgres:latest
     user: postgres
     env_file:
-      - ./.env.dev
+      - ./.env.prod.db
     volumes:
-      - db-data:/var/lib/postgresql/data
-       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=pass
-      - POSTGRES_DB=pong_app
+      - postgres_data:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5
-  
+    restart: always
+
+    
+
   nginx_frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
     working_dir: /usr/app/
     volumes:
+      - certificates:/etc/nginx/ssl  
+      - staticfiles:/staticfiles
       - ../frontend:/usr/share/nginx/html
-      - certificates:/etc/nginx/ssl
     ports:
       - 8000:80
     restart: always
+  
 
 volumes:
-  db-data:
+  postgres_data:
   certificates:
+  staticfiles: 

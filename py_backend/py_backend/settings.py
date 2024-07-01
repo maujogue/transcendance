@@ -25,6 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
+DJANGO_ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", default=0))
@@ -197,29 +198,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = True # A Retirer
-CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
 	"https://127.0.0.1:8000",
 	"https://localhost:8000",
+    "https://" + DJANGO_ALLOWED_HOSTS + ":8000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
 	"https://127.0.0.1:8000",
 	"https://localhost:8000",
+    "https://" + DJANGO_ALLOWED_HOSTS + ":8000",
 ]
 
 ALLOWED_HOSTS = [
 	"localhost",
 	"127.0.0.1",
-    "0.0.0.0"
+    "0.0.0.0",
+    DJANGO_ALLOWED_HOSTS,
 ]
 
 CORS_ORIGIN_WHITELIST = [
 	"https://127.0.0.1:8000",
 	"https://localhost:8000",
+    "https://" + DJANGO_ALLOWED_HOSTS + ":8000",
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

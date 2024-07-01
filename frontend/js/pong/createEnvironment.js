@@ -3,6 +3,7 @@ import { createField, createBorder } from './createField.js';
 import { winWidth, winHeight } from './varGlobal.js';
 import { isFullScreen } from './resize.js';
 import { stopStep } from './spaceBackground.js';
+import { addCrtEffect } from './menu.js';
 
 function getSize() {
 	var width = winWidth;
@@ -41,6 +42,8 @@ export function recreateCanvas(id) {
 	const canvas = document.getElementById(id);
 	canvas.remove();
 	const newCanvas = document.createElement("canvas");
+	canvas.width = getSize().width;
+	canvas.height = getSize().height;
 	newCanvas.id = id;
 	document.getElementById("game").appendChild(newCanvas);
 }

@@ -28,17 +28,22 @@ def create_tournament(request):
 	try:
 		max_players = int(data.get('max_players'))
 	except ValueError:
-		return JsonResponse({"errors": "Invalid number of players."}, status=400)
+		return JsonResponse({"errors": "Invalid number of players."},
+					status=400)
 	
 	if not name:
 		return JsonResponse({"errors": "Name is required."},
-				status=400)
+					status=400)
 	
 	if len(name) > 15:
 		return JsonResponse({"errors": "Name is too long."},
-				status=400)
+					status=400)
+	
+	if not name.isalnum():
+		return JsonResponse({"errors": "Name must be alphanumeric."},
+					status=400)
 
-	if not max_players in range(2, 33):
+	if not max_players in range(2, 9):
 		return JsonResponse({"errors": "Invalid number of players."}, status=400)
 
 	try:
@@ -53,14 +58,19 @@ def create_tournament(request):
 					status=400)
 		return JsonResponse({"errors": "Tournament could not be created."},
 					status=400)
-	tournamentJSON = {"id": tournament.id, "name": tournament.name, "max_players": tournament.max_players,
-					"participants": [p.tournament_username for p in tournament.participants.all()]}
+
+	tournamentJSON = {
+		"id": tournament.id,
+		"name": tournament.name,
+		"max_players": tournament.max_players,
+		"participants": [p.tournament_username for p in tournament.participants.all()]
+	}
 	return JsonResponse({"message": "Tournament created successfully.", "tournament": tournamentJSON},
 					status=201)
 
 @require_http_methods(["GET"])
 def list_tournaments(request):
-	tournaments = Tournament.objects.all() #TODO Return only tournaments that are not full
+	tournaments = Tournament.objects.all().filter(started=False)
 	tournaments = [{"id": t.id, "name": t.name, "max_players": t.max_players,
 					"participants": [p.tournament_username for p in t.participants.all()]}
 					for t in tournaments]
@@ -95,6 +105,7 @@ def join_tournament(request, tournament_id):
 					status=400)
 
 	tournament.participants.add(request.user)
+
 	return JsonResponse({"message": "Tournament joined successfully.", "id": tournament.id},
 					status=200)
 
@@ -139,10 +150,38 @@ def check_if_tournament_joined(request, username):
 	except CustomUser.DoesNotExist:
 		return JsonResponse({"errors": "User not found."},
 					status=404)
-	tournament = Tournament.objects.filter(participants=user).first()
-	if not tournament:
+	tournaments = Tournament.objects.filter(participants=user, finished=False)
+	if not tournaments:
 		return JsonResponse({"message": "User has not joined any tournament.", "joined": False},
 					status=200)
-	tournamentJSON = {"id": tournament.id, "name": tournament.name, "max_players": tournament.max_players,
-					"participants": [p.username for p in tournament.participants.all()]}
-	return JsonResponse({"message": "User has joined a tournament.", "joined": True, "tournament": tournamentJSON}, status=200)
+	for tournament in tournaments:
+		if not tournament.check_if_player_is_disqualified(user.tournament_username):
+			tournamentJSON = {"id": tournament.id, "name": tournament.name, "max_players": tournament.max_players,
+							"participants": [p.username for p in tournament.participants.all()]}
+			return JsonResponse({"message": "User has joined a tournament.", "tournament": tournamentJSON, "joined": True},
+						status=200)
+	return JsonResponse({"message": "User has joined a tournament.", "joined": False}, status=200)
+
+@require_http_methods(["GET"])
+def return_all_user_tournaments(request, username):
+	try:
+		user = CustomUser.objects.get(username=username)
+	except CustomUser.DoesNotExist:
+		return JsonResponse({"errors": "User not found."},
+					status=404)
+	tournaments = Tournament.objects.filter(participants=user, finished=True)
+	if not tournaments:
+		return JsonResponse({"message": "User has not joined any tournament.", "joined": False},
+					status=200)
+	
+	tournaments_data = [{
+			"id": tournament.id,
+			"name": tournament.name,
+			"max_players": tournament.max_players,
+			"participants": [participant.username for participant in tournament.participants.all()],
+			"finished": tournament.finished
+		}
+		for tournament in tournaments
+	]
+	return JsonResponse({"tournaments": tournaments_data},
+					status=200)

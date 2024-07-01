@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
 		verbose_name = 'Custom User'
 
 	username = models.CharField(max_length=settings.MAX_LEN_USERNAME, unique=True)
-	tournament_username = models.CharField(max_length=settings.MAX_LEN_USERNAME, unique=True, default='')
+	tournament_username = models.CharField(max_length=9, unique=True, default='')
 	email = models.EmailField(max_length=settings.MAX_LEN_EMAIL, unique=True)
 	email_is_verified = models.BooleanField(default=False)
 	title = models.CharField(max_length=50, null=True)
@@ -40,7 +40,7 @@ class CustomUser(AbstractUser):
 	
 	def save(self, *args, **kwargs):
 		if not self.tournament_username:
-			self.tournament_username = generate_random_pseudo(random.randint(4, 10))
+			self.tournament_username = generate_random_pseudo(random.randint(3, 5))
 		super().save(*args, **kwargs)
 		img = Image.open(self.avatar.path)
 		if img.height > 300 or img.width > 300:

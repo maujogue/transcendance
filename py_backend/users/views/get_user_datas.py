@@ -3,6 +3,7 @@ from django.views.decorators.csrf import requires_csrf_token
 from users.decorators import custom_login_required as login_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from stats.views import *
 from users.models import CustomUser
 from users.utils import convert_image_to_base64, utils_get_friendslist_data
 
@@ -18,6 +19,7 @@ def get_user_data(request, username=None):
     try:
         user_datas = {
             'username': user.username,
+            'tournament_username': user.tournament_username,
             'email': user.email,
             'email_is_verified': user.email_is_verified,
             'avatar': convert_image_to_base64(user.avatar),

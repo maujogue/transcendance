@@ -30,7 +30,6 @@ function physicsBall(ball, paddleBox) {
     let center = new THREE.Vector3();
     paddleBox.getCenter(center);
 
-	console.log("Center : ", center.y);
     ball.direction.x *= -1;
     if (ball.direction.x < 0 && ball.direction.x > -0.55)
         ball.direction.x -= 0.009;
@@ -68,7 +67,6 @@ function checkCollision(ball, player1, player2, environment) {
     let bbox1 = new THREE.Box3().setFromObject(player1.paddle.mesh);
     let bbox2 = new THREE.Box3().setFromObject(player2.paddle.mesh);
     let ballBox = new THREE.Box3();
-	console.log("Paddle player 1 : ", player1.paddle.mesh.position.y);
     
     ball.mesh.geometry.computeBoundingBox();
     ballBox.copy(ball.mesh.geometry.boundingBox).applyMatrix4(ball.mesh.matrixWorld);

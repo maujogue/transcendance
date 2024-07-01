@@ -1,6 +1,6 @@
 :root {
 	--form-color: rgb(175, 167, 2);
-	--form-bg-color: rgb(75, 72, 2);
+	--form-bg-color: rgb(255, 230, 9);
 	--form-input-bg-color: rgb(38, 38, 39);
 }
 
@@ -17,7 +17,10 @@ h1 {
 	text-align: center;
 }
 
-
+#bracket {
+	overflow-y: auto;
+	overflow-x: auto;
+}
 
  #game {
 	width: 960px;
@@ -28,10 +31,12 @@ h1 {
 	/* border: 5px solid black; */
 	margin: 0;
 	font-family: 'baumansregular', sans-serif;
+	border-radius: 20px;
 }
 
 #canvas {
-	position: fixed;
+	position: relative;
+	border-radius: 20px;
 }
 
 #menu {
@@ -138,7 +143,11 @@ h1 {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	margin: 2%;
+}
+
+#waitingText {
+	z-index: 1;
+	padding: 2%;
 }
 
 #tournamentMenu, #onlineMenu, #createTournament, #joinTournamentMenu, #localMenu {
@@ -156,7 +165,6 @@ h1 {
 	height: 80%;
 	overflow-y: auto;
 	justify-content: start!important;
-	color: white;
 }
 
 #tournamentsInfo {
@@ -182,6 +190,278 @@ h1 {
 	right: 0;
 }
 
+.player-info {
+    display: flex;
+    align-items: center;
+    padding: 4%;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.avatar {
+	width: 100px;
+	height: 100px
+}
+
+.intro-screen {
+    z-index: 1;
+    display: flex;
+    justify-content: space-around;
+}
+
+.ranking-title {
+	width: 100%;
+    border-bottom: 1px solid black;
+    padding: 0 0 2% 0;
+}
+
+.podium {
+	display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 50%;
+}
+
+.other {
+	width: 50%;
+}
+
+
+
+.timer {
+	z-index: 1;
+    position: absolute;
+    left: 38%;
+}
+
+.ranking {
+    flex-wrap: wrap;
+    align-self: start;
+    overflow-y: auto;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    font-size: 1.1em;
+    margin: 1% 6%;
+    padding: 3% 5%;
+    width: 87%;
+    height: 68%;
+}
+
+.crt-effect {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	pointer-events: none;
+	border-radius: 20px;
+}
+
+.show-bracket-btn {
+	bottom: 0;
+    left: 0;
+}
+
+.end-tournament-btn {
+	position: absolute;
+	margin: 5.5%;
+	font-size: 1em;
+	z-index: 1;
+	padding: 1%;
+}
+
+.end-tournament-btn:hover {
+	box-shadow: 2px 2px 25px 2px rgb(255, 255, 255);
+}
+
+.leave-tournament-btn {
+	bottom: 0;
+	right: 0;
+	width: 15%;
+}
+
+.show-ranking-btn {
+	bottom: 0;
+	left: 0;
+}
+
+.waiting-text {
+	position: absolute;
+    bottom: 0;
+    font-size: 1.5em;
+}
+
+.crt {
+    border-radius: 20px;
+	animation: textShadow 1.6s infinite;
+}
+
+.crt::after {
+	content: " ";
+	display: block;
+	border-radius: 20px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	opacity: 0;
+	z-index: 2;
+	pointer-events: none;
+	animation: flicker 2s infinite;
+  }
+
+.crt::before {
+	content: " ";
+	display: block;
+	position: absolute;
+	border-radius: 20px;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 2;
+	background-size: 100% 2px, 3px 100%;
+	pointer-events: none;
+  }
+
+
+.tournament {
+	color: #313131;
+	font-size: 0.5em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 75%;
+	opacity: 0.7;
+	box-shadow: 1px 1px 20px 2px var(--form-color);
+	border-radius: 10%;
+	background-color: var(--form-bg-color);
+	transform: perspective(600px) rotateX(25deg);
+	perspective: 10%;
+	filter: blur(2%);
+	position: relative;
+	overflow: hidden;
+	top: -5%;
+	height: 85%;
+	justify-content: start;
+	padding: 3%;
+	z-index: 1;
+}
+
+@keyframes textShadow {
+	0% {
+	  text-shadow: 0.4389924193300864px 0 1px rgba(0,30,255,0.5), -0.4389924193300864px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	5% {
+	  text-shadow: 2.7928974010788217px 0 1px rgba(0,30,255,0.5), -2.7928974010788217px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	10% {
+	  text-shadow: 0.02956275843481219px 0 1px rgba(0,30,255,0.5), -0.02956275843481219px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	15% {
+	  text-shadow: 0.40218538552878136px 0 1px rgba(0,30,255,0.5), -0.40218538552878136px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	20% {
+	  text-shadow: 3.4794037899852017px 0 1px rgba(0,30,255,0.5), -3.4794037899852017px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	25% {
+	  text-shadow: 1.6125630401149584px 0 1px rgba(0,30,255,0.5), -1.6125630401149584px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	30% {
+	  text-shadow: 0.7015590085143956px 0 1px rgba(0,30,255,0.5), -0.7015590085143956px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	55% {
+	  text-shadow: 2.3758461067427543px 0 1px rgba(0,30,255,0.5), -2.3758461067427543px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	60% {
+	  text-shadow: 2.202193051050636px 0 1px rgba(0,30,255,0.5), -2.202193051050636px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	65% {
+	  text-shadow: 2.8638780614874975px 0 1px rgba(0,30,255,0.5), -2.8638780614874975px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	70% {
+	  text-shadow: 0.48874025155497314px 0 1px rgba(0,30,255,0.5), -0.48874025155497314px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	75% {
+	  text-shadow: 1.8948491305757957px 0 1px rgba(0,30,255,0.5), -1.8948491305757957px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+	100% {
+	  text-shadow: 2.6208764473832513px 0 1px rgba(0,30,255,0.5), -2.6208764473832513px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+	}
+  }
+
+@keyframes flicker {
+	0% {
+	opacity: 0.27861;
+	}
+	5% {
+	opacity: 0.34769;
+	}
+	10% {
+	opacity: 0.23604;
+	}
+	15% {
+	opacity: 0.90626;
+	}
+	20% {
+	opacity: 0.18128;
+	}
+	25% {
+	opacity: 0.83891;
+	}
+	30% {
+	opacity: 0.65583;
+	}
+	35% {
+	opacity: 0.67807;
+	}
+	40% {
+	opacity: 0.26559;
+	}
+	45% {
+	opacity: 0.84693;
+	}
+	50% {
+	opacity: 0.96019;
+	}
+	55% {
+	opacity: 0.08594;
+	}
+	60% {
+	opacity: 0.20313;
+	}
+	65% {
+	opacity: 0.71988;
+	}
+	70% {
+	opacity: 0.53455;
+	}
+	75% {
+	opacity: 0.37288;
+	}
+	80% {
+	opacity: 0.71428;
+	}
+	85% {
+	opacity: 0.70419;
+	}
+	90% {
+	opacity: 0.7003;
+	}
+	95% {
+	opacity: 0.36108;
+	}
+	100% {
+	opacity: 0.24387;
+	}
+  }
+  
+  
+
 
 .avatar-in-game {
 	position: absolute;
@@ -189,15 +469,26 @@ h1 {
 	z-index: 1;
 }
 
-.error-pop-up {
+.pop-up {
 	position: absolute;
-	top: 40%;
-	background-color: rgb(120, 2, 2);
-	color: white;
+	top: 25%;
 	border: 1px solid black;
 	padding: 2%;
+	margin: 5%;
 	width: 60%;
+	color: white;
+	/* font-size: 2em; */
 }
+
+.error-pop-up {
+    background-color: rgba(120, 2, 2, 0.7);
+    z-index: 2;
+    justify-self: center;
+}
+
+.matchup-pop-up {
+	background-color: rgb(0, 0, 19);
+}	
 
 .match-error {
 	align-self: center;
@@ -241,30 +532,6 @@ h1 {
 }
 
 
-.tournament {
-	font-size: 0.5em;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	background-color: var(--form-input-bg-color);
-	width: 75%;
-	opacity: 0.9;
-	box-shadow: 1px 1px 20px 2px var(--form-color);
-	border-radius: 5%;
-	border: 1px solid black;
-	background-color: var(--form-bg-color);
-	transform: perspective(600px) rotateX(25deg);
-	perspective: 10%;
-	filter: blur(0.5px);
-	position: relative;
-	overflow: hidden;
-	top: -5%;
-	height: 85%;
-	justify-content: start;
-	padding: 3%;
-	z-index: 1;
-}
 
 #avatar_pong {
 	height: 50px;
@@ -287,102 +554,17 @@ h1 {
 	align-items: center;
 }
 
-.glitched {
-	animation: glitch 1.5s linear infinite;
-}
 
-.glitched:after, .glitched:before {
-	position: absolute;
-	left: 0;
-	animation: glitch 0.5s linear infinite;
-}
-
-.glitched:before{
-	animation: glitchTop 0.5s linear infinite;
-	clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-	-webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-}
-
-.glitched:after {
-	animation: glitchBottom 1.5s linear infinite;
-	clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-	-webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-}
-
-.form-field-name:after, .form-field-name:before {
-	content: "Name";
-	left: -1px;
-	animation: glitch 0.7s linear infinite;
-}
-
-.form-field-max_players:after, .form-field-max_players:before {
-	content: "Max Players";
-	left: -5px;
-	animation: glitch 0.4s linear infinite;
-}
-
-.form-field-max_points:after, .form-field-max_points:before {
-	content: "Max Points";
-	left: 2px;
-	animation: glitch 0.6s linear infinite;
-}
-
-.form-header::after, .form-header::before {
-	content: "Create Tournament";
-	left: -0.5px;
-	animation: glitch 1.5s linear infinite;
-}
-
-
-@keyframes glitch {
-	2%, 64% {
-		transform: translate(1px, 0) skew(0deg);
-		color: rgb(235, 235, 235);
-	}
-	4%, 60% {
-		transform: translate(-1px, 0) skew(0deg);
-	}
-	62% {
-		transform: translate(0, 0) skew(5deg);
-		color: white;
-	}
-}
-
-@keyframes glitchTop {
-	2%, 64% {
-		transform: translate(1px, 2px);
-	}
-	4%, 60% {
-		transform: translate(-2px, -2px);
-	}
-	62% {
-		transform: translate(1px, -1px) skew(50deg);
-	}
-}
-
-@keyframes glitchBottom {
-	2%, 64% {
-		transform: translate(0, 0);
-	}
-	4%, 60% {
-		transform: translate(0, 0);
-	}
-	62% {
-		transform: translate(-5px, 2px) skew(21deg);
-	}
-}
-
-.tournament::-webkit-scrollbar {
-	height: 123px;
+.tournament::-webkit-scrollbar, .bracket::-webkit-scrollbar {
 	border-radius: 20px;            /* width of the entire scrollbar */
 }
   
-.tournament::-webkit-scrollbar-track {
+.tournament::-webkit-scrollbar-track, .bracket::-webkit-scrollbar-track {
 	background: orange;
 	border-radius: 20px;          /* color of the tracking area */
 }
 
-.tournament::-webkit-scrollbar-thumb {
+.tournament::-webkit-scrollbar-thumb, .bracket::-webkit-scrollbar-thumb {
 background-color: rgb(0, 0, 19);    /* color of the scroll thumb */
 border-radius: 20px;       /* roundness of the scroll thumb */
 border: 3px solid orange;  /* creates padding around scroll thumb */
@@ -394,7 +576,9 @@ border: 3px solid orange;  /* creates padding around scroll thumb */
 	height: 10%;
 	background-color: var(--form-input-bg-color);
 	border: 1px solid black;
+	border-radius: 10px;
 	color: white;
+	font-size: 125% !important;
 }
 
 
@@ -431,30 +615,29 @@ border: 3px solid orange;  /* creates padding around scroll thumb */
 }
 
 .form-btn {
+	font-size: 125% !important;
 	border: none;
 	color: white;
+	width: 50%;
 	background-color: var(--form-input-bg-color);
 	font-family: 'baumansregular', sans-serif;
 	font-size: 1em;
 	margin: 10% 0;
-	padding: 5%;
+	padding: 2%;
 	position: relative;
 	overflow: hidden;
 	transform: perspective(600px) rotateX(25deg);
 	perspective: 10px;
-
+	
 }
 
-.form-btn::after, .form-btn::before {
-	content: "";
-	position: absolute;
-	left: -1px;
-	animation: glitch 2s linear infinite;
+.tournament-btn {
+	border-radius: 15px;
 }
   
 .form-btn:hover {
 	box-shadow: 2px 2px 25px 2px var(--form-color);
-	background-color: var(--form-color);
+	text-shadow: 0 0 12px var(--form-color);
 }
 
 .hidden {
@@ -525,7 +708,7 @@ border: 3px solid orange;  /* creates padding around scroll thumb */
 	width: 150%;
 	margin: 3% 0;
 	transition: all 0.5s ease;
-	z-index: 10;
+	z-index: 1;
 }
 
 #game .btn {
@@ -544,6 +727,7 @@ border: 3px solid orange;  /* creates padding around scroll thumb */
 	left: 0;
 	margin: 0.5%;
 	z-index: 1;
+	padding: 2%;
 }
 
 .menu {
@@ -554,6 +738,7 @@ border: 3px solid orange;  /* creates padding around scroll thumb */
 	flex-direction: column;
 	justify-content: space-between;
 	padding: 0;
+	box-shadow: 2px 2px 15px 2px black;
 }
 
 .inputAnimate {
@@ -654,6 +839,17 @@ border: 3px solid orange;  /* creates padding around scroll thumb */
 	bottom: 10%;
 }
 
+.close-icon {
+    position: absolute;
+    right: 0;
+    margin: 1.5% 5%;
+}
+
+.close-icon:hover {
+	transform: scale(1.2);
+	cursor: pointer;
+}
+
 #game .logo {
 	width: 100%;
 	z-index: 1;
@@ -684,6 +880,10 @@ border: 3px solid orange;  /* creates padding around scroll thumb */
 .icon:hover {
 	transform: scale(1.2);
 	cursor: pointer;
+}
+
+.won-title {
+	font-size: 1.75em;
 }
 
 @keyframes moveKey {
@@ -747,3 +947,32 @@ border: 3px solid orange;  /* creates padding around scroll thumb */
 	}
   }
 
+.endscreen {
+	position: absolute;
+	color: white;
+	text-align: center;
+	font-size: 2.5em;
+	z-index: 1;
+}
+
+.endscreen h3 {
+	font-size: 2.5em;
+}
+
+.endscreen-btn {
+	display: flex;
+	flex-direction: column;
+}
+
+.btn-endscreen {
+	width: 40%!important;
+}
+
+.endscreen #winMsg {
+	top: 10%;
+}
+
+.endscreen #lostMsg {
+	top: 10%;
+	font-size: 1.5em;
+}

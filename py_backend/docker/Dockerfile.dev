@@ -1,25 +1,13 @@
 FROM python:3.10
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
 COPY .. code
 WORKDIR /code
 
-RUN mkdir -p /code/static
+RUN mkdir -p /code/staticfiles
 
 COPY requirements.txt code/requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r code/requirements.txt
-RUN pip install urllib3 requests-toolbelt
 
-RUN		mkdir -p /etc/nginx/ssl
-
-RUN 	openssl req -x509 \
-                -nodes \
-                -out /etc/nginx/ssl/ssl_certificate.crt \
-                -keyout /etc/nginx/ssl/ssl_certificate_key.key \
-                -subj "/C=FR/ST=IDF/L=Lyon/O=42/OU=42/CN=maujogue.42.fr/UID=maujogue"
-
-COPY ./entrypoint.dev.sh /code/entrypoint.dev.sh
-CMD ["sh","docker/entrypoint.dev.sh"]
+COPY ./entrypoint.prod.sh /code/entrypoint.prod.sh
+CMD ["sh","docker/entrypoint.prod.sh"]

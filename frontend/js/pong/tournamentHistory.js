@@ -1,55 +1,58 @@
-import { createTournamentDiv} from "./menu.js";
+import { createTournamentDiv } from "./menu.js";
 import { connectToTournament } from "./tournament.js";
 import { get_csrf_token } from "../ApiUtils.js";
 import { displayErrorPopUp } from "./tournament.js";
 import { hostname } from "../Router.js";
+import { getUserData } from "../User.js";
 
-let allTournaments;
-
-async function getAllTournaments() {
+async function getUsername() {
     try {
-        const response = await fetch(`https://${hostname}:8000/api/tournament/list/`);
-        if (!response.ok) {
-            throw new Error('Erreur HTTP: ' + response.status);
-        }
-        return await response.json();
+        const userData = await getUserData();
+        return userData.username;
     } catch (error) {
-        throw new Error('Erreur:', error);
+        console.error("Error fetching user data:", error);
+        return null;
     }
 }
 
-function createTournamentInfo(tournament, currentParticipants, maxParticipants) {
+async function getUserTournaments(username) {
+    try {
+        const response = await fetch(`https://${hostname}:8000/api/tournament/history/${username}/`);
+        if (!response.ok) {
+            throw new Error('HTTP error: ' + response.status);
+        }
+        return await response.json();
+    } catch (error) {
+        throw new Error('Error:', error);
+    }
+}
+
+function createTournamentInfo(tournament) {
 	const parent = document.getElementById("tournamentsInfo");
 	const tournamentDiv = document.createElement("div");
 	tournamentDiv.className = "tournament-info";
     tournamentDiv.id = tournament.name;
 	const div = document.createElement("div");
 	div.textContent = tournament.name;
-	const div2 = document.createElement("div");
-	div2.textContent = currentParticipants + "/" + maxParticipants;
 	tournamentDiv.appendChild(div);
-	tournamentDiv.appendChild(div2);
 	parent.appendChild(tournamentDiv);
     tournamentDiv.addEventListener("click", () => {
-        joinTournament(tournament)
+        connectToTournament(tournament);
     });
 }
 
-function createDivJoinTournament(parent) {
+function createDivTournamentHistory(parent) {
     parent.innerHTML += '<i class="fa-solid fa-arrow-left icon" id="backIcon"></i> \
     <i class="fa-solid fa-rotate-right actualize-icon icon" id="actualizeIcon"></i>';
     const listTournament = document.getElementsByClassName("tournament")[0];
     const header = document.createElement("div");
     header.className = "list-header";
     const div = document.createElement("div");
-    div.textContent = "Tournaments name";
-	div.setAttribute("data-lang", "tournaments_name");
+    div.textContent = "Tournaments History";
     const div2 = document.createElement("div");
-    div2.textContent = "Nb";
     const tournamentsInfo = document.createElement("div");
     tournamentsInfo.id = "tournamentsInfo";
     header.appendChild(div);
-    header.appendChild(div2);
     listTournament.appendChild(header);
     listTournament.appendChild(tournamentsInfo);
     listTournament.id = "listTournament";
@@ -57,51 +60,34 @@ function createDivJoinTournament(parent) {
     
     parent.appendChild(listTournament);
     document.getElementById("actualizeIcon").addEventListener("click", () => {
-        displayAllTournaments();
+        displayUserTournaments();
     });
 }
 
-async function joinTournament(tournament) {
-    fetch(`https://${hostname}:8000/api/tournament/join/${tournament.id}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            "X-CSRFToken": await get_csrf_token(),
-        }
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.errors) {
-            throw new Error(data.errors);
-        }
-        connectToTournament(tournament);
-    })
-    .catch((error) => {
-        displayErrorPopUp(error, document.getElementsByClassName("tournament")[0]);
-    })
-}
-    
-
-async function displayAllTournaments() {
+async function displayUserTournaments() {
     if (document.getElementById("tournamentsInfo"))
         document.getElementById("tournamentsInfo").innerHTML = "";
     try {
-        const data = await getAllTournaments();
-        allTournaments = data.tournaments;
+        const username = await getUsername();
+        if (!username) {
+            console.error("Could not fetch the username.");
+            return ;
+        }
+        const data = await getUserTournaments(username);
         data.tournaments.map((tournament) => {
-            createTournamentInfo(tournament, tournament.participants.length, tournament.max_players);
+            createTournamentInfo(tournament, tournament.participants.length, tournament.maxParticipants);
         });
     } catch (error) {
-        console.error('Erreur:', error);
+        console.error("Error:", error);
     }
 }
 
 async function createListTournament(parent) {
-    createDivJoinTournament(parent);
-    displayAllTournaments();
+    createDivTournamentHistory(parent);
+    displayUserTournaments();
 }
 
-export function createJoinTournamentMenu() {
+export function createTournamentHistoryMenu() {
 	createTournamentDiv()
     const parent = document.getElementById("tournamentMenu");
 	createListTournament(parent);

@@ -2,6 +2,8 @@ import { isLoggedIn, toggleContentOnLogState, resetModalFormsInitListeners } fro
 import { injectUserData } from "./User.js";
 import { initArray, importFunction, injectModule } from "./Modules.js";
 
+export const hostname = window && window.location && window.location.hostname; 
+
 class Page {
 	constructor(name, urlPath, filePath, importJs) {
 		this.name = name;
